@@ -45,7 +45,7 @@ public class BloodPressureMeasurement {
         return heartRate;
     }
 
-    public Date getDateOfMeasurement() {
+    public LocalDate getDateOfMeasurement() {
         return dateOfMeasurement;
     }
 
