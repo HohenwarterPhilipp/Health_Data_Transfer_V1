@@ -1,20 +1,36 @@
 package com.example.health_data_transfer_v1.pkgData;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 
 import java.util.Date;
 
+@Entity(tableName = "BloodPressureMeasurement")
 public class BloodPressureMeasurement {
+    @PrimaryKey(autoGenerate = true)
+    public int uid;
+
+    @ColumnInfo(name = "diastolic")
     private int diastolic;
+
+    @ColumnInfo(name = "systolic")
     private int systolic;
+
+    @ColumnInfo(name = "heartRate")
     private int heartRate;
+
+    @ColumnInfo(name = "dateOfMeasurement")
     private LocalDate dateOfMeasurement;
+
 
     public BloodPressureMeasurement(int diastolic, int systolic, int heartRate, LocalDate dateOfMeasurement) {
         this.diastolic = diastolic;
-        this.systolic=systolic;
-        this.heartRate=heartRate;
-        this.dateOfMeasurement=dateOfMeasurement;
+        this.systolic = systolic;
+        this.heartRate = heartRate;
+        this.dateOfMeasurement = dateOfMeasurement;
     }
 
     public int getDiastolic() {
@@ -37,4 +53,5 @@ public class BloodPressureMeasurement {
     public String toString() {
         return dateOfMeasurement.toString();
     }
+
 }

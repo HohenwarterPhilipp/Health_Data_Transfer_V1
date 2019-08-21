@@ -1,10 +1,21 @@
 package com.example.health_data_transfer_v1.pkgData;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 
+@Entity(tableName = "ScaleMeasurement")
 public class ScaleMeasurement {
+    @PrimaryKey(autoGenerate = true)
+    public int uid;
+
+    @ColumnInfo(name = "weight")
     private float weight;
+    @ColumnInfo(name = "bmi")
     private float bmi;
+    @ColumnInfo(name = "dateOfMeasurement")
     private LocalDate dateOfMeasurement;
 
     public ScaleMeasurement(float weight, float bmi, LocalDate dateOfMeasurement) {
@@ -29,4 +40,5 @@ public class ScaleMeasurement {
     public String toString() {
         return dateOfMeasurement.toString();
     }
+
 }

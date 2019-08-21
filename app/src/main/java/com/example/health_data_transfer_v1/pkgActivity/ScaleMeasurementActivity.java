@@ -12,12 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.health_data_transfer_v1.R;
-import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
-import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgManager.AlertManager;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgViews.PopupConnectingCountdown;
-import com.example.health_data_transfer_v1.pkgViews.PopupMeasurementDataGraphBloodPressure;
 import com.example.health_data_transfer_v1.pkgViews.PopupMeasurementDataGraphScale;
 import com.example.health_data_transfer_v1.pkgViews.PopupMeasurementDataScale;
 import com.ivy.ivyconnect.device.callback.DeviceConnectCallback;

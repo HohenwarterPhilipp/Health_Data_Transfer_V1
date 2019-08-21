@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import com.example.health_data_transfer_v1.R;
-import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgMisc.MeasurementData;
 import com.github.mikephil.charting.charts.LineChart;
