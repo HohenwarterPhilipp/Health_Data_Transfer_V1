@@ -79,8 +79,7 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         initArrayAdapter();
         initManager();
         adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
-        adapterScaleMeasurement.add(new ScaleMeasurement(120, 140, new LocalDate(System.currentTimeMillis()+10000)));
-        adapterScaleMeasurement.add(new ScaleMeasurement(140, 130, new LocalDate(System.currentTimeMillis() + 4000000)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(120, 140, new LocalDate(System.currentTimeMillis()+999999999)));
         //adapterScaleMeasurement.add(new ScaleMeasurement(214, 12, new LocalDate(System.currentTimeMillis() + 777777777)));
         //adapterScaleMeasurement.add(new ScaleMeasurement(110, 53, new LocalDate(System.currentTimeMillis() + 888888888)));
         //adapterScaleMeasurement.add(new ScaleMeasurement(222, 112, new LocalDate(System.currentTimeMillis() + 999999999)));

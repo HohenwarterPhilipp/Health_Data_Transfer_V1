@@ -11,10 +11,12 @@ import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgMisc.MeasurementData;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
@@ -89,8 +91,8 @@ public class PopupMeasurementDataGraphBloodPressure {
         xAxis.setLabelCount(3, true);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value) {
-                return new LocalDate((long)value).getLocalDateAsString();
+            public String getAxisLabel(float value, AxisBase axis) {
+                return super.getAxisLabel(value, axis);
             }
         });
     }

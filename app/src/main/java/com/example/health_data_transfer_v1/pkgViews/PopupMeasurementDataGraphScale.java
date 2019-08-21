@@ -11,12 +11,15 @@ import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgMisc.MeasurementData;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 
@@ -70,9 +73,11 @@ public class PopupMeasurementDataGraphScale {
         lineData=new LineData(dataSets);
         lineChartMeasurementDataScale.setData(lineData);
         lineChartMeasurementDataScale.getDescription().setText("");
-        lineChartMeasurementDataScale.setScaleEnabled(true);
-        setXAxis();
         setVisibleRange(measurements.get(0), measurements.get(measurements.size()-1));
+        lineChartMeasurementDataScale.setScaleEnabled(true);
+        lineChartMeasurementDataScale.getAxisRight().setEnabled(false);
+        lineChartMeasurementDataScale.invalidate();
+        setXAxis();
     }
 
     private void setXAxis(){
@@ -81,25 +86,26 @@ public class PopupMeasurementDataGraphScale {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return "MZP"+value;
+                LocalDate localDate=new LocalDate((long)value);
+                return localDate.getLocalDateAsString();
             }
         });
+        xAxis.setAxisMaximum(2);
     }
 
     private void setVisibleRange(ScaleMeasurement smFirst, ScaleMeasurement smLast){
-        long range=smLast.getDateOfMeasurement().getTime()-smFirst.getDateOfMeasurement().getTime();
-        lineChartMeasurementDataScale.setVisibleXRangeMaximum(range);
+        lineChartMeasurementDataScale.setVisibleXRangeMaximum(100000);
     }
 
     private ArrayList<Entry> getDataValues(ArrayList<ScaleMeasurement> measurements, MeasurementData measurementData){
         ArrayList<Entry> dataValues=new ArrayList<Entry>();
         if(measurementData==MeasurementData.WEIGHT){
             for(int idx=0; idx<measurements.size(); idx++){
-                dataValues.add(new Entry(idx, measurements.get(idx).getWeight()));
+                dataValues.add(new Entry(measurements.get(idx).getDateOfMeasurement().getTime(), measurements.get(idx).getWeight()));
             }
         } else if(measurementData==MeasurementData.BMI){
             for(int idx=0; idx<measurements.size(); idx++){
-                dataValues.add(new Entry(idx, measurements.get(idx).getBmi()));
+                dataValues.add(new Entry(measurements.get(idx).getDateOfMeasurement().getTime(), measurements.get(idx).getBmi()));
             }
         }
 
