@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.health_data_transfer_v1.R;
+import com.example.health_data_transfer_v1.pkgData.AppDatabase;
 import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
+import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgManager.AlertManager;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgViews.PopupConnectingCountdown;
@@ -30,6 +32,7 @@ import com.ivy.ivyconnect.util.Error;
 import com.ivy.ivyconnect.util.MeasurementType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -74,12 +77,14 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
         setSupportActionBar(toolbar);
         initArrayAdapter();
         initManager();
-        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis()+ 1111111)));   //only for tests
+
+        adapterBloodPressureMeasurement.addAll(getBloodPressureMeasurements(AppDatabase.getAppDatabase(this)));
+       /* adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis()+ 1111111)));   //only for tests
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(120, 110, 95, new LocalDate(System.currentTimeMillis() + 333333333)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(140, 130, 105, new LocalDate(System.currentTimeMillis() + 666666666)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 15, new LocalDate(System.currentTimeMillis() + 777777777)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 888888888)));
-        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));
+        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));*/
     }
 
     private void initArrayAdapter(){
@@ -188,10 +193,21 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
             PressureComplete pressureComplete=(PressureComplete)o;
             currentBloodPressureMeasurement=new BloodPressureMeasurement(pressureComplete.getDiastolic(), pressureComplete.getSystolic(), pressureComplete.getHeartRate(), new LocalDate(System.currentTimeMillis()));
             adapterBloodPressureMeasurement.add(currentBloodPressureMeasurement);
+            addBloodPressureMeasurement(AppDatabase.getAppDatabase(this),currentBloodPressureMeasurement);
             deviceArm.destroy();
             btnReceiveBloodPressureMeasurement.setEnabled(true);
         }
     }
+
+    private static BloodPressureMeasurement addBloodPressureMeasurement(final AppDatabase db, BloodPressureMeasurement bloodPressureMeasurement) {
+        db.bloodPressureMeasurementDao().insertBloodPressureMeasurements(bloodPressureMeasurement);
+        return bloodPressureMeasurement;
+    }
+
+    private static List<BloodPressureMeasurement> getBloodPressureMeasurements(final AppDatabase db) {
+        return db.bloodPressureMeasurementDao().getAll();
+    }
+
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
