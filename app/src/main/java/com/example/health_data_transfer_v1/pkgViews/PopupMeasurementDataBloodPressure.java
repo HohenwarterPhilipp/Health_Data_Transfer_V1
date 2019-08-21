@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.widget.TextView;
 
 import com.example.health_data_transfer_v1.R;
+import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
 
 public class PopupMeasurementDataBloodPressure{
     private Context context;

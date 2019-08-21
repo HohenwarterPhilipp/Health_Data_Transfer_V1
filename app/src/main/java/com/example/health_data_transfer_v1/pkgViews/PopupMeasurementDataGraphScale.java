@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import com.example.health_data_transfer_v1.R;
+import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgMisc.MeasurementData;
 import com.github.mikephil.charting.charts.LineChart;
@@ -80,25 +81,25 @@ public class PopupMeasurementDataGraphScale {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return new LocalDate((long)value).getLocalDateAsString();
+                return "MZP"+value;
             }
         });
     }
 
     private void setVisibleRange(ScaleMeasurement smFirst, ScaleMeasurement smLast){
-        int range=(int)smLast.getDateOfMeasurement().getTime()-(int)smFirst.getDateOfMeasurement().getTime();
-        lineChartMeasurementDataScale.setVisibleXRangeMaximum(111111);
+        long range=smLast.getDateOfMeasurement().getTime()-smFirst.getDateOfMeasurement().getTime();
+        lineChartMeasurementDataScale.setVisibleXRangeMaximum(range);
     }
 
     private ArrayList<Entry> getDataValues(ArrayList<ScaleMeasurement> measurements, MeasurementData measurementData){
         ArrayList<Entry> dataValues=new ArrayList<Entry>();
         if(measurementData==MeasurementData.WEIGHT){
-            for(ScaleMeasurement sm:measurements){
-                dataValues.add(new Entry(sm.getDateOfMeasurement().getTime(), sm.getWeight()));
+            for(int idx=0; idx<measurements.size(); idx++){
+                dataValues.add(new Entry(idx, measurements.get(idx).getWeight()));
             }
         } else if(measurementData==MeasurementData.BMI){
-            for(ScaleMeasurement sm:measurements){
-                dataValues.add(new Entry(sm.getDateOfMeasurement().getTime(), sm.getBmi()));
+            for(int idx=0; idx<measurements.size(); idx++){
+                dataValues.add(new Entry(idx, measurements.get(idx).getBmi()));
             }
         }
 
