@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:padding="1dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/popup_rounded_corner">
+
+    <RelativeLayout
+        android:layout_width="308dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.514">
+
+        <TextView
+            android:id="@+id/txtWeightValue"
+            android:layout_width="89dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/lblWeight"
+            android:gravity="right"
+            android:textSize="30dp"
+            android:textStyle="bold|italic"/>
+
+        <TextView
+            android:id="@+id/lblWeight"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Weight(kg): "
+            android:textSize="30dp"
+            android:textStyle="bold|italic"/>
+
+        <TextView
+            android:id="@+id/lblBMI"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lblWeight"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="13dp"
+            android:text="BMI(kg/m²):"
+            android:textSize="30dp"
+            android:textStyle="bold|italic"/>
+
+        <TextView
+            android:id="@+id/txtBMIValue"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtWeightValue"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="13dp"
+            android:layout_toEndOf="@+id/lblBMI"
+            android:gravity="right"
+            android:textSize="30dp"
+            android:textStyle="bold|italic"/>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
