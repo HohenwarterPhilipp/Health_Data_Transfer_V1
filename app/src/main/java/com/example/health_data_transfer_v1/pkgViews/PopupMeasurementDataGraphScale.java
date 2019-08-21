@@ -90,11 +90,11 @@ public class PopupMeasurementDataGraphScale {
                 return localDate.getLocalDateAsString();
             }
         });
-        xAxis.setAxisMaximum(2);
     }
 
     private void setVisibleRange(ScaleMeasurement smFirst, ScaleMeasurement smLast){
-        lineChartMeasurementDataScale.setVisibleXRangeMaximum(100000);
+        long range=smLast.getDateOfMeasurement().getTime()-smFirst.getDateOfMeasurement().getTime();
+        lineChartMeasurementDataScale.setVisibleXRangeMaximum((int)range);
     }
 
     private ArrayList<Entry> getDataValues(ArrayList<ScaleMeasurement> measurements, MeasurementData measurementData){
