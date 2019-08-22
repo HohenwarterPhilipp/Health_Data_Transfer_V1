@@ -82,11 +82,11 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         initManager();
 
         adapterScaleMeasurement.addAll(getScaleMeasurements(AppDatabase.getAppDatabase(this)));
-        //adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
-        //adapterScaleMeasurement.add(new ScaleMeasurement(120, 140, new LocalDate(System.currentTimeMillis()+999999999)));
-        //adapterScaleMeasurement.add(new ScaleMeasurement(214, 12, new LocalDate(System.currentTimeMillis() + 777777777)));
-        //adapterScaleMeasurement.add(new ScaleMeasurement(110, 53, new LocalDate(System.currentTimeMillis() + 888888888)));
-        //adapterScaleMeasurement.add(new ScaleMeasurement(222, 112, new LocalDate(System.currentTimeMillis() + 999999999)));
+        /*adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
+        adapterScaleMeasurement.add(new ScaleMeasurement(157, 98, new LocalDate(System.currentTimeMillis() + 200000)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(158, 98.5f, new LocalDate(System.currentTimeMillis() + 444444)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(155, 96.5f, new LocalDate(System.currentTimeMillis() + 9999999)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(140, 90, new LocalDate(System.currentTimeMillis() + 999999999)));*/
     }
 
     private void initArrayAdapter() {
@@ -220,11 +220,12 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
         ArrayList<ScaleMeasurement> measurements = new ArrayList<>();
+
         for (int idx = 0; idx < adapterScaleMeasurement.getCount(); idx++) {
             measurements.add(adapterScaleMeasurement.getItem(idx));
         }
 
-        popupMeasurementDataGraphScale.showPopup(measurements);
+        popupMeasurementDataGraphScale.showPopup(measurements, position);
         return true;
     }
 

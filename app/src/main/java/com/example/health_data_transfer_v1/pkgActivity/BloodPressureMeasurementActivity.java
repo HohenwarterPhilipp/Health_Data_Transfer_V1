@@ -79,12 +79,12 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
         initManager();
 
         adapterBloodPressureMeasurement.addAll(getBloodPressureMeasurements(AppDatabase.getAppDatabase(this)));
-       /* adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis()+ 1111111)));   //only for tests
+        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis()+ 1111111)));   //only for tests
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(120, 110, 95, new LocalDate(System.currentTimeMillis() + 333333333)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(140, 130, 105, new LocalDate(System.currentTimeMillis() + 666666666)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 15, new LocalDate(System.currentTimeMillis() + 777777777)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 888888888)));
-        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));*/
+        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));
     }
 
     private void initArrayAdapter(){
@@ -216,7 +216,7 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
             measurements.add(adapterBloodPressureMeasurement.getItem(idx));
         }
 
-        popupMeasurementDataGraphBloodPressure.showPopup(measurements);
+        popupMeasurementDataGraphBloodPressure.showPopup(measurements, position);
         return true;
     }
 

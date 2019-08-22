@@ -25,7 +25,11 @@ public class LocalDate extends Date {
     }
 
     public String getLocalDateAsString(){
-        return calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH)+1) + "." + calendar.get(Calendar.YEAR);
+        return calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH)+1);
+    }
+
+    public String getHoursOfCurrentDayAsString(){
+        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + (calendar.get(Calendar.MINUTE));
     }
 
     @Override

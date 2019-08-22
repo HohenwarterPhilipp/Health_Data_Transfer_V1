@@ -4,19 +4,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.health_data_transfer_v1.R;
 import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
+import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
-import com.example.health_data_transfer_v1.pkgMisc.MeasurementData;
+import com.example.health_data_transfer_v1.pkgMisc.MeasurementValueType;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
@@ -29,14 +32,15 @@ public class PopupMeasurementDataGraphBloodPressure {
     private LineDataSet lineDataSetHeartRate;
     private LineDataSet lineDataSetDiastolic;
     private LineDataSet lineDataSetSystolic;
-    private ArrayList<ILineDataSet> dataSets;
+    private ArrayList<ILineDataSet> lineDataSets;
     private LineData lineData;
-    private ArrayList<BloodPressureMeasurement> measurements;
+    private ArrayList<LocalDate> listLocalDatesXAxis;
 
     public PopupMeasurementDataGraphBloodPressure(Context context) {
         this.context=context;
         initDialog();
         getAllViews();
+        initLineChartComponents();
     }
 
     private void getAllViews(){
@@ -50,75 +54,108 @@ public class PopupMeasurementDataGraphBloodPressure {
         dialogPopupMeasurementDataGraphBloodPressure.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    private void initOtherThings(){
-        lineDataSetHeartRate=new LineDataSet(getDataValues(measurements, MeasurementData.HEARTRATE), "heart rate");
-        lineDataSetHeartRate.setCircleRadius(5);
-        lineDataSetHeartRate.setDrawCircleHole(false);
-        lineDataSetHeartRate.setColor(Color.RED);
-        lineDataSetHeartRate.setLineWidth(3);
-        lineDataSetHeartRate.setCircleColor(Color.RED);
-        lineDataSetHeartRate.setValueTextSize(10);
-        lineDataSetDiastolic=new LineDataSet(getDataValues(measurements, MeasurementData.DIASTOLIC), "diastolic");
-        lineDataSetDiastolic.setCircleRadius(5);
-        lineDataSetDiastolic.setDrawCircleHole(false);
-        lineDataSetDiastolic.setColor(Color.CYAN);
-        lineDataSetDiastolic.setLineWidth(3);
-        lineDataSetDiastolic.setCircleColor(Color.CYAN);
-        lineDataSetDiastolic.setValueTextSize(10);
-        lineDataSetSystolic=new LineDataSet(getDataValues(measurements, MeasurementData.SYSTOLIC), "systolic");
-        lineDataSetSystolic.setCircleRadius(5);
-        lineDataSetSystolic.setDrawCircleHole(false);
-        lineDataSetSystolic.setColor(Color.MAGENTA);
-        lineDataSetSystolic.setLineWidth(3);
-        lineDataSetSystolic.setCircleColor(Color.MAGENTA);
-        lineDataSetSystolic.setValueTextSize(10);
-
-        dataSets=new ArrayList<>();
-        dataSets.add(lineDataSetHeartRate);
-        dataSets.add(lineDataSetDiastolic);
-        dataSets.add(lineDataSetSystolic);
-
-        lineData=new LineData(dataSets);
-        lineChartMeasurementDataBloodPressure.setData(lineData);
-        lineChartMeasurementDataBloodPressure.setVisibleXRangeMaximum(500000000);
-        lineChartMeasurementDataBloodPressure.getDescription().setText("");
-        lineChartMeasurementDataBloodPressure.setScaleEnabled(false);
-        setXAxis();
+    private void settingsLineDataSet(LineDataSet lineDataSet, int color){
+        lineDataSet.setCircleRadius(5);
+        lineDataSet.setDrawCircleHole(false);
+        lineDataSet.setColor(color);
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setCircleColor(color);
+        lineDataSet.setValueTextSize(10);
     }
 
-    private void setXAxis(){
+    private void initLineChartComponents(){
+        lineDataSets=new ArrayList<>();
+        listLocalDatesXAxis=new ArrayList<>();
+        lineDataSetHeartRate=new LineDataSet(null, "heart rate");
+        lineDataSetDiastolic=new LineDataSet(null, "diastolic");
+        lineDataSetSystolic=new LineDataSet(null, "systolic");
+
+        settingsLineDataSet(lineDataSetHeartRate, Color.RED);
+        settingsLineDataSet(lineDataSetDiastolic, Color.CYAN);
+        settingsLineDataSet(lineDataSetSystolic, Color.MAGENTA);
+
+        lineChartMeasurementDataBloodPressure.getDescription().setText("");
+        lineChartMeasurementDataBloodPressure.setScaleEnabled(false);
+        lineChartMeasurementDataBloodPressure.getAxisRight().setEnabled(false);
+    }
+
+    private void formatXAxis(){
         XAxis xAxis=lineChartMeasurementDataBloodPressure.getXAxis();
-        xAxis.setLabelCount(3, true);
+        xAxis.setLabelCount(4, true);
         xAxis.setValueFormatter(new ValueFormatter() {
+            int idx;
             @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                return super.getAxisLabel(value, axis);
+            public String getFormattedValue(float value) {
+                idx=(int)value;
+
+                if(idx<listLocalDatesXAxis.size()-0.9){
+                    return new LocalDate(listLocalDatesXAxis.get((int)value).getTime()).getLocalDateAsString();
+                }
+
+                return "";
             }
         });
     }
 
-    private ArrayList<Entry> getDataValues(ArrayList<BloodPressureMeasurement> measurements, MeasurementData measurementData){
-        ArrayList<Entry> dataValues=new ArrayList<Entry>();
-        if(measurementData==MeasurementData.HEARTRATE){
-            for(BloodPressureMeasurement bpm:measurements){
-                dataValues.add(new Entry(bpm.getDateOfMeasurement().getTime(), bpm.getHeartRate()));
+    private ArrayList<Entry> getDataValues(ArrayList<BloodPressureMeasurement> measurements, MeasurementValueType measurementData){
+        ArrayList<Entry> dataValues=new ArrayList<>();
+
+        if(measurementData== MeasurementValueType.HEARTRATE){
+            for(int idx=0; idx<measurements.size(); idx++){
+                listLocalDatesXAxis.add(measurements.get(idx).getDateOfMeasurement());
+                dataValues.add(new Entry(idx, measurements.get(idx).getHeartRate()));
             }
-        } else if(measurementData==MeasurementData.DIASTOLIC){
-            for(BloodPressureMeasurement bpm:measurements){
-                dataValues.add(new Entry(bpm.getDateOfMeasurement().getTime(), bpm.getDiastolic()));
+        } else if(measurementData== MeasurementValueType.DIASTOLIC){
+            for(int idx=0; idx<measurements.size(); idx++){
+                dataValues.add(new Entry(idx, measurements.get(idx).getDiastolic()));
             }
-        } else if(measurementData==MeasurementData.SYSTOLIC){
-            for(BloodPressureMeasurement bpm:measurements){
-                dataValues.add(new Entry(bpm.getDateOfMeasurement().getTime(), bpm.getSystolic()));
+        } else if(measurementData== MeasurementValueType.SYSTOLIC) {
+            for (int idx = 0; idx < measurements.size(); idx++) {
+                dataValues.add(new Entry(idx, measurements.get(idx).getSystolic()));
             }
         }
 
         return dataValues;
     }
 
-    public void showPopup(ArrayList<BloodPressureMeasurement> measurementsToShow) {
-        measurements=measurementsToShow;
-        initOtherThings();
+    private void fillLineDataSet(ArrayList<Entry> entriesLineDataSet, LineDataSet lineDataSet){
+        for(Entry entry:entriesLineDataSet){
+            lineDataSet.addEntry(entry);
+        }
+    }
+
+    public void showPopup(ArrayList<BloodPressureMeasurement> measurements, int idxChosenMeasurement) {
+        ArrayList<Entry> entriesHeartRate=getDataValues(measurements, MeasurementValueType.HEARTRATE);
+        ArrayList<Entry> entriesDiastolic=getDataValues(measurements, MeasurementValueType.DIASTOLIC);
+        ArrayList<Entry> entriesSystolic=getDataValues(measurements, MeasurementValueType.SYSTOLIC);
+
+        lineDataSetHeartRate.clear();
+        lineDataSetDiastolic.clear();
+        lineDataSetSystolic.clear();
+        fillLineDataSet(entriesHeartRate, lineDataSetHeartRate);
+        fillLineDataSet(entriesDiastolic, lineDataSetDiastolic);
+        fillLineDataSet(entriesSystolic, lineDataSetSystolic);
+        lineDataSets.clear();
+        lineDataSets.add(lineDataSetHeartRate);
+        lineDataSets.add(lineDataSetDiastolic);
+        lineDataSets.add(lineDataSetSystolic);
+        lineData=new LineData(lineDataSets);
+        lineChartMeasurementDataBloodPressure.setData(lineData);
+        lineChartMeasurementDataBloodPressure.invalidate();
+        lineChartMeasurementDataBloodPressure.setVisibleXRangeMaximum(3);
+
+        Entry entryChosenMeasurementHeartRate=lineDataSetHeartRate.getEntryForIndex(idxChosenMeasurement);
+        Entry entryChosenMeasurementDiastolic=lineDataSetDiastolic.getEntryForIndex(idxChosenMeasurement);
+        Entry entryChosenMeasurementSystolic=lineDataSetSystolic.getEntryForIndex(idxChosenMeasurement);
+
+
+        Drawable drawableCircleChosenMeasurement= ResourcesCompat.getDrawable(context.getResources(), R.drawable.circle_choosen_measurement, null);
+        entryChosenMeasurementHeartRate.setIcon(drawableCircleChosenMeasurement);
+        entryChosenMeasurementDiastolic.setIcon(drawableCircleChosenMeasurement);
+        entryChosenMeasurementSystolic.setIcon(drawableCircleChosenMeasurement);
+
+
+        formatXAxis();
         dialogPopupMeasurementDataGraphBloodPressure.show();
     }
 
