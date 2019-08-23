@@ -11,7 +11,9 @@ import androidx.room.TypeConverters;
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
+
     public abstract BloodPressureMeasurementDao bloodPressureMeasurementDao();
+
     public abstract ScaleMeasurementDao scaleMeasurementDao();
 
     public static AppDatabase getAppDatabase(Context context) {
@@ -20,7 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "measurement-database")
                             // allow queries on the main thread.
                             // Don't do this on a real app! See PersistenceBasicSample for an example.
-                            .allowMainThreadQueries()
+                            // .allowMainThreadQueries()
                             .build();
         }
         return INSTANCE;

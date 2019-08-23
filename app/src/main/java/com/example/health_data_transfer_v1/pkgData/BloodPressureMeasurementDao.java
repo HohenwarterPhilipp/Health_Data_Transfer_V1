@@ -13,7 +13,6 @@ public interface  BloodPressureMeasurementDao {
     @Query("SELECT * FROM BloodPressureMeasurement")
     List<BloodPressureMeasurement> getAll();
 
-
     @Insert
     void insertBloodPressureMeasurements(BloodPressureMeasurement... bloodPressureMeasurements);
 

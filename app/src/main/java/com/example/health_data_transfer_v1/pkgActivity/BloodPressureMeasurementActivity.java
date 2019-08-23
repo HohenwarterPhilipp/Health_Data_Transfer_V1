@@ -1,8 +1,8 @@
 package com.example.health_data_transfer_v1.pkgActivity;
 
-import android.content.Intent;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.health_data_transfer_v1.R;
 import com.example.health_data_transfer_v1.pkgData.AppDatabase;
 import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
+import com.example.health_data_transfer_v1.pkgData.DatabaseHandler;
 import com.example.health_data_transfer_v1.pkgManager.AlertManager;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgViews.PopupConnectingCountdown;
@@ -32,8 +33,6 @@ import com.ivy.ivyconnect.util.MeasurementType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BloodPressureMeasurementActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DeviceConnectCallback, DeviceMeasurementCallback, DeviceDisconnectCallback, DeviceReconnectCallback {
     private Button btnReceiveBloodPressureMeasurement;
@@ -55,50 +54,51 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
         registerEventHandlers();
         initOtherThings();
         initPopups();
-        adapterBloodPressureMeasurement.addAll(getBloodPressureMeasurementsFromDB(AppDatabase.getAppDatabase(this)));
 
-        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis()+ 1111111)));   //only for tests
+        new AllMeasurementsLoader().execute(this);
+
+       /* adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(100, 200, 90, new LocalDate(System.currentTimeMillis() + 1111111)));   //only for tests
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(120, 110, 95, new LocalDate(System.currentTimeMillis() + 333333333)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(140, 130, 105, new LocalDate(System.currentTimeMillis() + 666666666)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 15, new LocalDate(System.currentTimeMillis() + 777777777)));
         adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 888888888)));
-        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));
+        adapterBloodPressureMeasurement.add(new BloodPressureMeasurement(110, 100, 85, new LocalDate(System.currentTimeMillis() + 999999999)));*/
     }
 
     //region activity configuration methods
-    private void getAllViews(){
-        btnReceiveBloodPressureMeasurement=findViewById(R.id.btnReceiveBloodPressureMeasurement);
-        listBloodPressureMeasurement=findViewById(R.id.listBloodPressureMeasurement);
-        toolbar=findViewById(R.id.toolbar);
+    private void getAllViews() {
+        btnReceiveBloodPressureMeasurement = findViewById(R.id.btnReceiveBloodPressureMeasurement);
+        listBloodPressureMeasurement = findViewById(R.id.listBloodPressureMeasurement);
+        toolbar = findViewById(R.id.toolbar);
     }
 
-    private void registerEventHandlers(){
+    private void registerEventHandlers() {
         btnReceiveBloodPressureMeasurement.setOnClickListener(this);
         listBloodPressureMeasurement.setOnItemLongClickListener(this);
         listBloodPressureMeasurement.setOnItemClickListener(this);
     }
 
-    private void initOtherThings(){
-        deviceArm=new DeviceArm();
-        currentBloodPressureMeasurement=null;
+    private void initOtherThings() {
+        deviceArm = new DeviceArm();
+        currentBloodPressureMeasurement = null;
         setSupportActionBar(toolbar);
         initArrayAdapter();
         initManager();
     }
 
-    private void initArrayAdapter(){
-        adapterBloodPressureMeasurement=new ArrayAdapter<>(this, R.layout.layout_listview_center_items, R.id.txtListItem);
+    private void initArrayAdapter() {
+        adapterBloodPressureMeasurement = new ArrayAdapter<>(this, R.layout.layout_listview_center_items, R.id.txtListItem);
         listBloodPressureMeasurement.setAdapter(adapterBloodPressureMeasurement);
     }
 
-    private void initManager(){
-        alertManager=new AlertManager(this);
+    private void initManager() {
+        alertManager = new AlertManager(this);
     }
 
-    private void initPopups(){
-        popupConnectingCountdown=new PopupConnectingCountdown(this);
-        popupMeasurementData=new PopupMeasurementDataBloodPressure(this);
-        popupMeasurementDataGraphBloodPressure=new PopupMeasurementDataGraphBloodPressure(this);
+    private void initPopups() {
+        popupConnectingCountdown = new PopupConnectingCountdown(this);
+        popupMeasurementData = new PopupMeasurementDataBloodPressure(this);
+        popupMeasurementDataGraphBloodPressure = new PopupMeasurementDataGraphBloodPressure(this);
     }
     //endregion
 
@@ -107,7 +107,7 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
         try {
             if (view.getId() == R.id.btnReceiveBloodPressureMeasurement) {
                 popupConnectingCountdown.showPopup();
-                currentBloodPressureMeasurement=null;
+                currentBloodPressureMeasurement = null;
                 btnReceiveBloodPressureMeasurement.setEnabled(false);
                 deviceArm.scan(this, this);
             }
@@ -119,9 +119,9 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ArrayList<BloodPressureMeasurement> measurements=new ArrayList<>();
+        ArrayList<BloodPressureMeasurement> measurements = new ArrayList<>();
 
-        for(int idx=0; idx<adapterBloodPressureMeasurement.getCount(); idx++){
+        for (int idx = 0; idx < adapterBloodPressureMeasurement.getCount(); idx++) {
             measurements.add(adapterBloodPressureMeasurement.getItem(idx));
         }
 
@@ -131,12 +131,12 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        BloodPressureMeasurement bloodPressureMeasurement=(BloodPressureMeasurement) adapterView.getItemAtPosition(position);
+        BloodPressureMeasurement bloodPressureMeasurement = (BloodPressureMeasurement) adapterView.getItemAtPosition(position);
         popupMeasurementData.showPopup(bloodPressureMeasurement);
     }
 
     //region device connection methods
-    private void registerDeviceListener(){
+    private void registerDeviceListener() {
         deviceArm.setDisconnectCallback(this);
         deviceArm.setReconnectCallback(this);
     }
@@ -200,11 +200,10 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
 
     @Override
     public void onMeasurementFinished(MeasurementType measurementType, Object o) {
-        if(currentBloodPressureMeasurement==null){
-            PressureComplete pressureComplete=(PressureComplete)o;
-            currentBloodPressureMeasurement=new BloodPressureMeasurement(pressureComplete.getDiastolic(), pressureComplete.getSystolic(), pressureComplete.getHeartRate(), new LocalDate(System.currentTimeMillis()));
-            adapterBloodPressureMeasurement.add(currentBloodPressureMeasurement);
-            addBloodPressureMeasurementToDB(AppDatabase.getAppDatabase(this),currentBloodPressureMeasurement);
+        if (currentBloodPressureMeasurement == null) {
+            PressureComplete pressureComplete = (PressureComplete) o;
+            currentBloodPressureMeasurement = new BloodPressureMeasurement(pressureComplete.getDiastolic(), pressureComplete.getSystolic(), pressureComplete.getHeartRate(), new LocalDate(System.currentTimeMillis()));
+            new MeasurementSaver(currentBloodPressureMeasurement).execute(this);
             deviceArm.destroy();
             btnReceiveBloodPressureMeasurement.setEnabled(true);
         }
@@ -218,14 +217,37 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
     }
     //endregion
 
-    //region local database methods
-    private static BloodPressureMeasurement addBloodPressureMeasurementToDB(final AppDatabase database, BloodPressureMeasurement bloodPressureMeasurement) {
-        database.bloodPressureMeasurementDao().insertBloodPressureMeasurements(bloodPressureMeasurement);
-        return bloodPressureMeasurement;
+    private class AllMeasurementsLoader extends AsyncTask<Context, Void, List<BloodPressureMeasurement>> {
+
+        @Override
+        protected List<BloodPressureMeasurement> doInBackground(Context... contexts) {
+            return DatabaseHandler.getBloodPressureMeasurementsFromDB(AppDatabase.getAppDatabase(getApplicationContext()));
+        }
+
+        @Override
+        protected void onPostExecute(List<BloodPressureMeasurement> measurements) {
+            super.onPostExecute(measurements);
+            adapterBloodPressureMeasurement.addAll(measurements);
+        }
     }
 
-    private static List<BloodPressureMeasurement> getBloodPressureMeasurementsFromDB(final AppDatabase database) {
-        return database.bloodPressureMeasurementDao().getAll();
+    private class MeasurementSaver extends AsyncTask<Context, Void,BloodPressureMeasurement> {
+
+        BloodPressureMeasurement cur;
+
+        public MeasurementSaver(BloodPressureMeasurement currentBloodPressureMeasurement) {
+        cur =currentBloodPressureMeasurement;
+        }
+
+        @Override
+        protected BloodPressureMeasurement doInBackground(Context... contexts) {
+            return DatabaseHandler.addBloodPressureMeasurementToDB(AppDatabase.getAppDatabase(getApplicationContext()),cur);
+        }
+
+        @Override
+        protected void onPostExecute(BloodPressureMeasurement measurement) {
+            super.onPostExecute(measurement);
+            adapterBloodPressureMeasurement.add(measurement);
+        }
     }
-    //endregion
 }

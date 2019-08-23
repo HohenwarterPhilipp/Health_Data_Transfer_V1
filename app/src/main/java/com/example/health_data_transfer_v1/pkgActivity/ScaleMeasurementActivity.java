@@ -1,5 +1,7 @@
 package com.example.health_data_transfer_v1.pkgActivity;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.health_data_transfer_v1.R;
 import com.example.health_data_transfer_v1.pkgData.AppDatabase;
+import com.example.health_data_transfer_v1.pkgData.DatabaseHandler;
 import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgManager.AlertManager;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
@@ -53,13 +56,13 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         registerEventHandlers();
         initOtherThings();
         initPopups();
-        adapterScaleMeasurement.addAll(getScaleMeasurementsFromDB(AppDatabase.getAppDatabase(this)));
+        new AllMeasurementsLoader().execute(this);
 
-        adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
+    /*    adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
         adapterScaleMeasurement.add(new ScaleMeasurement(157, 98, new LocalDate(System.currentTimeMillis() + 200000)));
         adapterScaleMeasurement.add(new ScaleMeasurement(158, 98.5f, new LocalDate(System.currentTimeMillis() + 444444)));
         adapterScaleMeasurement.add(new ScaleMeasurement(155, 96.5f, new LocalDate(System.currentTimeMillis() + 9999999)));
-        adapterScaleMeasurement.add(new ScaleMeasurement(140, 90, new LocalDate(System.currentTimeMillis() + 999999999)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(140, 90, new LocalDate(System.currentTimeMillis() + 999999999)));*/
     }
 
     //region activity configuration methods
@@ -211,24 +214,13 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         if (currentScaleMeasurement == null) {
             ScaleSimple scaleSimple = (ScaleSimple) o;
             currentScaleMeasurement = new ScaleMeasurement(scaleSimple.getWeight(), scaleSimple.getBmi(), new LocalDate(System.currentTimeMillis()));
-            adapterScaleMeasurement.add(currentScaleMeasurement);
-            addScaleMeasurementsToBD(AppDatabase.getAppDatabase(this), currentScaleMeasurement);
+            new MeasurementSaver(currentScaleMeasurement).execute(this);
             deviceScale.destroy();
             btnReceiveScaleMeasurement.setEnabled(true);
         }
     }
     //endregion
 
-    //region local database methods
-    private static ScaleMeasurement addScaleMeasurementsToBD(final AppDatabase database, ScaleMeasurement scaleMeasurement) {
-        database.scaleMeasurementDao().insertScaleMeasurements(scaleMeasurement);
-        return scaleMeasurement;
-    }
-
-    private static List<ScaleMeasurement> getScaleMeasurementsFromDB(final AppDatabase database) {
-        return database.scaleMeasurementDao().getAll();
-    }
-    //endregion
 
     //region scale user methods
     @Override
@@ -240,4 +232,38 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     public void onResistanceUpdate(int i) {
     }
     //endregion
+
+    private class AllMeasurementsLoader extends AsyncTask<Context, Void, List<ScaleMeasurement>> {
+
+        @Override
+        protected List<ScaleMeasurement> doInBackground(Context... contexts) {
+            return DatabaseHandler.getScaleMeasurementsFromDB(AppDatabase.getAppDatabase(getApplicationContext()));
+        }
+
+        @Override
+        protected void onPostExecute(List<ScaleMeasurement> measurements) {
+            super.onPostExecute(measurements);
+            adapterScaleMeasurement.addAll(measurements);
+        }
+    }
+
+    private class MeasurementSaver extends AsyncTask<Context, Void, ScaleMeasurement> {
+
+        ScaleMeasurement cur;
+
+        public MeasurementSaver(ScaleMeasurement currentScaleMeasurement) {
+            cur = currentScaleMeasurement;
+        }
+
+        @Override
+        protected ScaleMeasurement doInBackground(Context... contexts) {
+            return DatabaseHandler.addScaleMeasurementsToBD(AppDatabase.getAppDatabase(getApplicationContext()), cur);
+        }
+
+        @Override
+        protected void onPostExecute(ScaleMeasurement measurement) {
+            super.onPostExecute(measurement);
+            adapterScaleMeasurement.add(measurement);
+        }
+    }
 }
