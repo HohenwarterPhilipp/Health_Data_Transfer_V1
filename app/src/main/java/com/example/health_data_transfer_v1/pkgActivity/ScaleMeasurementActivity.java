@@ -53,8 +53,16 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         registerEventHandlers();
         initOtherThings();
         initPopups();
+        adapterScaleMeasurement.addAll(getScaleMeasurementsFromDB(AppDatabase.getAppDatabase(this)));
+
+        adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
+        adapterScaleMeasurement.add(new ScaleMeasurement(157, 98, new LocalDate(System.currentTimeMillis() + 200000)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(158, 98.5f, new LocalDate(System.currentTimeMillis() + 444444)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(155, 96.5f, new LocalDate(System.currentTimeMillis() + 9999999)));
+        adapterScaleMeasurement.add(new ScaleMeasurement(140, 90, new LocalDate(System.currentTimeMillis() + 999999999)));
     }
 
+    //region activity configuration methods
     private void getAllViews() {
         btnReceiveScaleMeasurement = findViewById(R.id.btnReceiveScaleMeasurement);
         listScaleMeasurement = findViewById(R.id.listScaleMeasurement);
@@ -67,26 +75,16 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     }
 
     private void initOtherThings() {
+        currentScaleMeasurement = null;
+        deviceScale = new DeviceScale();
+        alertManager = new AlertManager(this);
         deviceScale = new DeviceScale();
         adapterScaleMeasurement = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
         listScaleMeasurement.setAdapter(adapterScaleMeasurement);
-        currentScaleMeasurement = null;
-        alertManager = new AlertManager(this);
-
-
-        deviceScale = new DeviceScale();
-        currentScaleMeasurement = null;
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initArrayAdapter();
         initManager();
-
-        adapterScaleMeasurement.addAll(getScaleMeasurements(AppDatabase.getAppDatabase(this)));
-        /*adapterScaleMeasurement.add(new ScaleMeasurement(160, 100, new LocalDate(System.currentTimeMillis())));   //only for tests
-        adapterScaleMeasurement.add(new ScaleMeasurement(157, 98, new LocalDate(System.currentTimeMillis() + 200000)));
-        adapterScaleMeasurement.add(new ScaleMeasurement(158, 98.5f, new LocalDate(System.currentTimeMillis() + 444444)));
-        adapterScaleMeasurement.add(new ScaleMeasurement(155, 96.5f, new LocalDate(System.currentTimeMillis() + 9999999)));
-        adapterScaleMeasurement.add(new ScaleMeasurement(140, 90, new LocalDate(System.currentTimeMillis() + 999999999)));*/
     }
 
     private void initArrayAdapter() {
@@ -103,6 +101,7 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         popupMeasurementData = new PopupMeasurementDataScale(this);
         popupMeasurementDataGraphScale = new PopupMeasurementDataGraphScale(this);
     }
+    //endregion
 
     @Override
     public void onClick(View view) {
@@ -119,6 +118,25 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         }
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+        ArrayList<ScaleMeasurement> measurements = new ArrayList<>();
+
+        for (int idx = 0; idx < adapterScaleMeasurement.getCount(); idx++) {
+            measurements.add(adapterScaleMeasurement.getItem(idx));
+        }
+
+        popupMeasurementDataGraphScale.showPopup(measurements, position);
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        ScaleMeasurement scaleMeasurement = (ScaleMeasurement) adapterView.getItemAtPosition(position);
+        popupMeasurementData.showPopup(scaleMeasurement);
+    }
+
+    //region device connection methods
     @Override
     public void onDeviceConnected() {
         try {
@@ -164,7 +182,9 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
         alertManager.cancelAlertDialogReconnecting();
         alertManager.showAlertDialogReconnected();
     }
+    //endregion
 
+    //region device measurement methods
     @Override
     public void onMeasurementStarted() {
 
@@ -192,46 +212,32 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
             ScaleSimple scaleSimple = (ScaleSimple) o;
             currentScaleMeasurement = new ScaleMeasurement(scaleSimple.getWeight(), scaleSimple.getBmi(), new LocalDate(System.currentTimeMillis()));
             adapterScaleMeasurement.add(currentScaleMeasurement);
-            addScaleMeasurements(AppDatabase.getAppDatabase(this), currentScaleMeasurement);
+            addScaleMeasurementsToBD(AppDatabase.getAppDatabase(this), currentScaleMeasurement);
             deviceScale.destroy();
             btnReceiveScaleMeasurement.setEnabled(true);
         }
     }
+    //endregion
 
-    private static ScaleMeasurement addScaleMeasurements(final AppDatabase db, ScaleMeasurement scaleMeasurement) {
-        db.scaleMeasurementDao().insertScaleMeasurements(scaleMeasurement);
+    //region local database methods
+    private static ScaleMeasurement addScaleMeasurementsToBD(final AppDatabase database, ScaleMeasurement scaleMeasurement) {
+        database.scaleMeasurementDao().insertScaleMeasurements(scaleMeasurement);
         return scaleMeasurement;
     }
 
-    private static List<ScaleMeasurement> getScaleMeasurements(final AppDatabase db) {
-        return db.scaleMeasurementDao().getAll();
+    private static List<ScaleMeasurement> getScaleMeasurementsFromDB(final AppDatabase database) {
+        return database.scaleMeasurementDao().getAll();
     }
+    //endregion
 
+    //region scale user methods
     @Override
     public ScaleUserInfoWithBodyType getUserInfo(DeviceScale.Type type) {
-        return new ScaleUserInfoWithBodyType(18, ScaleUserInfo.Gender.MAN, 178, ScaleUserInfo.BodyType.NORMAL);
+        return new ScaleUserInfoWithBodyType(18, ScaleUserInfo.Gender.MAN, 178, ScaleUserInfo.BodyType.NORMAL);             //only a plain scale user for testing the measurement
     }
 
     @Override
     public void onResistanceUpdate(int i) {
-        Toast.makeText(this, i, Toast.LENGTH_LONG).show();
     }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ArrayList<ScaleMeasurement> measurements = new ArrayList<>();
-
-        for (int idx = 0; idx < adapterScaleMeasurement.getCount(); idx++) {
-            measurements.add(adapterScaleMeasurement.getItem(idx));
-        }
-
-        popupMeasurementDataGraphScale.showPopup(measurements, position);
-        return true;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ScaleMeasurement scaleMeasurement = (ScaleMeasurement) adapterView.getItemAtPosition(position);
-        popupMeasurementData.showPopup(scaleMeasurement);
-    }
+    //endregion
 }
