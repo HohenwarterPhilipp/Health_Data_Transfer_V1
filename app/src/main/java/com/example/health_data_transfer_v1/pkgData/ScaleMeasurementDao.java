@@ -9,7 +9,6 @@ import java.util.List;
 
 @Dao
 public interface ScaleMeasurementDao {
-
     @Query("SELECT * FROM ScaleMeasurement")
     List<ScaleMeasurement> getAll();
 

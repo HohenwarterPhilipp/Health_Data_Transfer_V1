@@ -6,8 +6,6 @@ import androidx.room.PrimaryKey;
 
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 
-import java.util.Date;
-
 @Entity(tableName = "BloodPressureMeasurement")
 public class BloodPressureMeasurement {
     @PrimaryKey(autoGenerate = true)

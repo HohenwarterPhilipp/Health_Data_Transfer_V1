@@ -15,21 +15,13 @@ public class AlertManager {
     private SweetAlertDialog alertDialogReconnectingFailed;
     private SweetAlertDialog alertDialogReconnected;
     private SweetAlertDialog alertDialogMeasurementError;
-    private SweetAlertDialog alertDialogException;
     private SweetAlertDialog alertDialogGPS;
+    private SweetAlertDialog alertDialogGraphMeasurement;
     private CountdownManager countdownManagerAlertDialog;
     private SweetAlertDialog.OnSweetClickListener onSweetClickListener;
 
     public AlertManager(Activity activity){
         this.activity=activity;
-        configureAlertDialogConnected();
-        configureAlertDialogConnectionFailed();
-        configureAlertDialogDisconnected();
-        configureAlertDialogReconnecting();
-        configureAlertDialogReconnectingFailed();
-        configureAlertDialogReconnected();
-        configureAlertDialogMeasurementError();
-        configureAlertDialogException();
         initOtherThings();
     }
 
@@ -39,8 +31,8 @@ public class AlertManager {
 
     public void setOnSweetClickListener(SweetAlertDialog.OnSweetClickListener onSweetClickListener){
         this.onSweetClickListener=onSweetClickListener;
-        configureAlertDialogGPS();
     }
+
     //region configure alert methods
     private void configureAlertDialogConnected(){
         alertDialogConnected=new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
@@ -83,12 +75,6 @@ public class AlertManager {
                 .hideConfirmButton();
     }
 
-    private void configureAlertDialogException(){
-        alertDialogException=new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Error")
-                .hideConfirmButton();
-    }
-
     private void configureAlertDialogGPS(){
         alertDialogGPS=new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Please turn GPS on!")
@@ -96,51 +82,66 @@ public class AlertManager {
 
         alertDialogGPS.setCanceledOnTouchOutside(false);
     }
+
+    private void configureAlertDialogGraphMeasurement(){
+        alertDialogGraphMeasurement=new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("There must be at least two measurement entries for showing the chart!")
+                .hideConfirmButton();
+    }
     //endregion
 
     //region show alert methods
     public void showAlertDialogConnected(){
+        configureAlertDialogConnected();
         alertDialogConnected.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogConnected);
     }
 
     public void showAlertDialogConnectionFailed(){
+        configureAlertDialogConnectionFailed();
         alertDialogConnectionFailed.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogConnectionFailed);
     }
 
     public void showAlertDialogDisconnected(){
+        configureAlertDialogDisconnected();
         alertDialogDisconnected.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogDisconnected);
     }
 
     public void showAlertDialogReconnecting(){
+        configureAlertDialogReconnecting();
         alertDialogReconnecting.show();
     }
 
     public void showAlertDialogReconnectingFailed(){
+        configureAlertDialogReconnectingFailed();
         alertDialogReconnectingFailed.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogReconnectingFailed);
     }
 
     public void showAlertDialogReconnected(){
+        configureAlertDialogReconnected();
         alertDialogReconnected.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogReconnected);
     }
 
     public void showAlertDialogMeasurementError(Error error){
+        configureAlertDialogMeasurementError();
         alertDialogMeasurementError.setTitle("Measurement error: " + error.toString());
         alertDialogMeasurementError.show();
         countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogMeasurementError);
     }
 
-    public void showAlertDialogException(Exception ex){
-        alertDialogException.setContentText(ex.getMessage());
-        alertDialogException.show();
+    public void showAlertDialogGPS(){
+        configureAlertDialogGPS();
+        alertDialogGPS.show();
     }
 
-    public void showAlertDialogGPS(){
-        alertDialogGPS.show();
+    public void showAlertDialogGraphMeasurement(){
+        configureAlertDialogGraphMeasurement();
+        alertDialogGraphMeasurement.show();
+        countdownManagerAlertDialog.startCountdownAlertDialog(alertDialogGraphMeasurement);
     }
     //endregion
 

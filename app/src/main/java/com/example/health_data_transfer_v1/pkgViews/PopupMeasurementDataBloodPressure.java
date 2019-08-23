@@ -24,12 +24,7 @@ public class PopupMeasurementDataBloodPressure{
         getAllViews();
     }
 
-    private void initDialog(){
-        dialogPopupMeasurementDataBloodPressure=new Dialog(context);
-        dialogPopupMeasurementDataBloodPressure.setContentView(R.layout.popup_measurement_data_blood_pressure);
-        dialogPopupMeasurementDataBloodPressure.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
-
+    //region dialog configuration methods
     private void getAllViews(){
         lblDiastolic=dialogPopupMeasurementDataBloodPressure.findViewById(R.id.lblDiastolic);
         txtDiastolicValue=dialogPopupMeasurementDataBloodPressure.findViewById(R.id.txtDiastolicValue);
@@ -38,6 +33,13 @@ public class PopupMeasurementDataBloodPressure{
         lblHeartRate=dialogPopupMeasurementDataBloodPressure.findViewById(R.id.lblHeartRate);
         txtHeartRateValue=dialogPopupMeasurementDataBloodPressure.findViewById(R.id.txtHeartRateValue);
     }
+
+    private void initDialog(){
+        dialogPopupMeasurementDataBloodPressure=new Dialog(context);
+        dialogPopupMeasurementDataBloodPressure.setContentView(R.layout.popup_measurement_data_blood_pressure);
+        dialogPopupMeasurementDataBloodPressure.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
+    //endregion
 
     private void setDialogFields(BloodPressureMeasurement bloodPressureMeasurement){
         txtDiastolicValue.setText(String.valueOf(bloodPressureMeasurement.getDiastolic()));

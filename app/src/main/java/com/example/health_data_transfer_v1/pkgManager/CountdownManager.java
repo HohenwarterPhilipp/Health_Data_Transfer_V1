@@ -56,7 +56,7 @@ public class CountdownManager {
             @Override
             public void onFinish() {
                 if(currentSweetAlertDialog.isShowing()){
-                    currentSweetAlertDialog.dismiss();
+                    currentSweetAlertDialog.cancel();
                 }
             }
         };

@@ -23,6 +23,7 @@ public class PopupMeasurementDataScale {
         getAllViews();
     }
 
+    //region dialog configuration methods
     private void initDialog(){
         dialogPopupMeasurementDataScale=new Dialog(context);
         dialogPopupMeasurementDataScale.setContentView(R.layout.popup_measurement_data_scale);
@@ -35,6 +36,7 @@ public class PopupMeasurementDataScale {
         lblBMI=dialogPopupMeasurementDataScale.findViewById(R.id.lblBMI);
         txtBMIValue=dialogPopupMeasurementDataScale.findViewById(R.id.txtBMIValue);
     }
+    //endregion
 
     private void setDialogFields(ScaleMeasurement scaleMeasurement){
         txtWeightValue.setText(String.valueOf(scaleMeasurement.getWeight()));

@@ -27,10 +27,10 @@ public class PopupMeasurementDataGraphScale {
     private Context context;
     private Dialog dialogPopupMeasurementDataGraphScale;
     private LineChart lineChartMeasurementDataScale;
+    private LineData lineData;
+    private ArrayList<ILineDataSet> lineDataSets;
     private LineDataSet lineDataSetWeight;
     private LineDataSet lineDataSetBmi;
-    private ArrayList<ILineDataSet> lineDataSets;
-    private LineData lineData;
     private ArrayList<LocalDate> listLocalDatesXAxis;
 
     public PopupMeasurementDataGraphScale(Context context) {
@@ -40,6 +40,7 @@ public class PopupMeasurementDataGraphScale {
         initLineChartComponents();
     }
 
+    //region dialog configuration methods
     private void getAllViews(){
         lineChartMeasurementDataScale=dialogPopupMeasurementDataGraphScale.findViewById(R.id.lineChartMeasurementDataBloodPressure);
         lineChartMeasurementDataScale.setVisibility(View.VISIBLE);
@@ -73,6 +74,7 @@ public class PopupMeasurementDataGraphScale {
         lineChartMeasurementDataScale.setScaleEnabled(false);
         lineChartMeasurementDataScale.getAxisRight().setEnabled(false);
     }
+    //endregion
 
     private void formatXAxis(){
         XAxis xAxis=lineChartMeasurementDataScale.getXAxis();
@@ -115,25 +117,27 @@ public class PopupMeasurementDataGraphScale {
         }
     }
 
+    private void clearLineDataSets(){
+        lineDataSetWeight.clear();
+        lineDataSetBmi.clear();
+        lineDataSets.clear();
+    }
+
     public void showPopup(ArrayList<ScaleMeasurement> measurements, int idxChosenMeasurement) {
         ArrayList<Entry> entriesWeight=getDataValues(measurements, MeasurementValueType.WEIGHT);
         ArrayList<Entry> entriesBmi=getDataValues(measurements, MeasurementValueType.BMI);
 
-        lineDataSetWeight.clear();
-        lineDataSetBmi.clear();
+        clearLineDataSets();
         fillLineDataSet(entriesWeight, lineDataSetWeight);
         fillLineDataSet(entriesBmi, lineDataSetBmi);
-        lineDataSets.clear();
         lineDataSets.add(lineDataSetWeight);
         lineDataSets.add(lineDataSetBmi);
         lineData=new LineData(lineDataSets);
         lineChartMeasurementDataScale.setData(lineData);
         lineChartMeasurementDataScale.invalidate();
         lineChartMeasurementDataScale.setVisibleXRangeMaximum(3);
-
         Entry entryChosenMeasurementWeight=lineDataSetWeight.getEntryForIndex(idxChosenMeasurement);
         Entry entryChosenMeasurementBmi=lineDataSetBmi.getEntryForIndex(idxChosenMeasurement);
-
         Drawable drawableCircleChosenMeasurement= ResourcesCompat.getDrawable(context.getResources(), R.drawable.circle_choosen_measurement, null);
         entryChosenMeasurementWeight.setIcon(drawableCircleChosenMeasurement);
         entryChosenMeasurementBmi.setIcon(drawableCircleChosenMeasurement);

@@ -119,13 +119,17 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ArrayList<BloodPressureMeasurement> measurements = new ArrayList<>();
+        if(adapterView.getCount()>1){
+            ArrayList<BloodPressureMeasurement> measurements = new ArrayList<>();
 
-        for (int idx = 0; idx < adapterBloodPressureMeasurement.getCount(); idx++) {
-            measurements.add(adapterBloodPressureMeasurement.getItem(idx));
+            for (int idx = 0; idx < adapterBloodPressureMeasurement.getCount(); idx++) {
+                measurements.add(adapterBloodPressureMeasurement.getItem(idx));
+            }
+
+            popupMeasurementDataGraphBloodPressure.showPopup(measurements, position);
+        } else {
+            alertManager.showAlertDialogGraphMeasurement();
         }
-
-        popupMeasurementDataGraphBloodPressure.showPopup(measurements, position);
         return true;
     }
 
@@ -151,7 +155,6 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
             deviceArm.startMeasurement(this);
         } catch (InterruptedException ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-            alertManager.showAlertDialogException(ex);
         }
     }
 

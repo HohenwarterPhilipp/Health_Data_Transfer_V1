@@ -123,13 +123,17 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ArrayList<ScaleMeasurement> measurements = new ArrayList<>();
+        if(adapterView.getCount()>1){
+            ArrayList<ScaleMeasurement> measurements = new ArrayList<>();
 
-        for (int idx = 0; idx < adapterScaleMeasurement.getCount(); idx++) {
-            measurements.add(adapterScaleMeasurement.getItem(idx));
+            for (int idx = 0; idx < adapterScaleMeasurement.getCount(); idx++) {
+                measurements.add(adapterScaleMeasurement.getItem(idx));
+            }
+
+            popupMeasurementDataGraphScale.showPopup(measurements, position);
+        } else {
+            alertManager.showAlertDialogGraphMeasurement();
         }
-
-        popupMeasurementDataGraphScale.showPopup(measurements, position);
         return true;
     }
 

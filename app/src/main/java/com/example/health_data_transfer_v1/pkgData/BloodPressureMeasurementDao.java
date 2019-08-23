@@ -9,7 +9,6 @@ import java.util.List;
 
 @Dao
 public interface  BloodPressureMeasurementDao {
-
     @Query("SELECT * FROM BloodPressureMeasurement")
     List<BloodPressureMeasurement> getAll();
 

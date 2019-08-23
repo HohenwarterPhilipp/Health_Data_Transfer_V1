@@ -11,11 +11,9 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.example.health_data_transfer_v1.R;
 import com.example.health_data_transfer_v1.pkgData.BloodPressureMeasurement;
-import com.example.health_data_transfer_v1.pkgData.ScaleMeasurement;
 import com.example.health_data_transfer_v1.pkgMisc.LocalDate;
 import com.example.health_data_transfer_v1.pkgMisc.MeasurementValueType;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -29,11 +27,11 @@ public class PopupMeasurementDataGraphBloodPressure {
     private Context context;
     private Dialog dialogPopupMeasurementDataGraphBloodPressure;
     private LineChart lineChartMeasurementDataBloodPressure;
+    private LineData lineData;
+    private ArrayList<ILineDataSet> lineDataSets;
     private LineDataSet lineDataSetHeartRate;
     private LineDataSet lineDataSetDiastolic;
     private LineDataSet lineDataSetSystolic;
-    private ArrayList<ILineDataSet> lineDataSets;
-    private LineData lineData;
     private ArrayList<LocalDate> listLocalDatesXAxis;
 
     public PopupMeasurementDataGraphBloodPressure(Context context) {
@@ -43,6 +41,7 @@ public class PopupMeasurementDataGraphBloodPressure {
         initLineChartComponents();
     }
 
+    //region dialog configuration methods
     private void getAllViews(){
         lineChartMeasurementDataBloodPressure=dialogPopupMeasurementDataGraphBloodPressure.findViewById(R.id.lineChartMeasurementDataBloodPressure);
         lineChartMeasurementDataBloodPressure.setVisibility(View.VISIBLE);
@@ -78,6 +77,7 @@ public class PopupMeasurementDataGraphBloodPressure {
         lineChartMeasurementDataBloodPressure.setScaleEnabled(false);
         lineChartMeasurementDataBloodPressure.getAxisRight().setEnabled(false);
     }
+    //endregion
 
     private void formatXAxis(){
         XAxis xAxis=lineChartMeasurementDataBloodPressure.getXAxis();
@@ -124,18 +124,22 @@ public class PopupMeasurementDataGraphBloodPressure {
         }
     }
 
+    private void clearLineDataSets(){
+        lineDataSets.clear();
+        lineDataSetHeartRate.clear();
+        lineDataSetDiastolic.clear();
+        lineDataSetSystolic.clear();
+    }
+
     public void showPopup(ArrayList<BloodPressureMeasurement> measurements, int idxChosenMeasurement) {
         ArrayList<Entry> entriesHeartRate=getDataValues(measurements, MeasurementValueType.HEARTRATE);
         ArrayList<Entry> entriesDiastolic=getDataValues(measurements, MeasurementValueType.DIASTOLIC);
         ArrayList<Entry> entriesSystolic=getDataValues(measurements, MeasurementValueType.SYSTOLIC);
 
-        lineDataSetHeartRate.clear();
-        lineDataSetDiastolic.clear();
-        lineDataSetSystolic.clear();
+        clearLineDataSets();
         fillLineDataSet(entriesHeartRate, lineDataSetHeartRate);
         fillLineDataSet(entriesDiastolic, lineDataSetDiastolic);
         fillLineDataSet(entriesSystolic, lineDataSetSystolic);
-        lineDataSets.clear();
         lineDataSets.add(lineDataSetHeartRate);
         lineDataSets.add(lineDataSetDiastolic);
         lineDataSets.add(lineDataSetSystolic);
@@ -143,17 +147,13 @@ public class PopupMeasurementDataGraphBloodPressure {
         lineChartMeasurementDataBloodPressure.setData(lineData);
         lineChartMeasurementDataBloodPressure.invalidate();
         lineChartMeasurementDataBloodPressure.setVisibleXRangeMaximum(3);
-
         Entry entryChosenMeasurementHeartRate=lineDataSetHeartRate.getEntryForIndex(idxChosenMeasurement);
         Entry entryChosenMeasurementDiastolic=lineDataSetDiastolic.getEntryForIndex(idxChosenMeasurement);
         Entry entryChosenMeasurementSystolic=lineDataSetSystolic.getEntryForIndex(idxChosenMeasurement);
-
-
         Drawable drawableCircleChosenMeasurement= ResourcesCompat.getDrawable(context.getResources(), R.drawable.circle_choosen_measurement, null);
         entryChosenMeasurementHeartRate.setIcon(drawableCircleChosenMeasurement);
         entryChosenMeasurementDiastolic.setIcon(drawableCircleChosenMeasurement);
         entryChosenMeasurementSystolic.setIcon(drawableCircleChosenMeasurement);
-
 
         formatXAxis();
         dialogPopupMeasurementDataGraphBloodPressure.show();

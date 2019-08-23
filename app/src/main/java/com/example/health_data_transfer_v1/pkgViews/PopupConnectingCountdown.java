@@ -4,19 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.health_data_transfer_v1.R;
 import com.example.health_data_transfer_v1.pkgManager.CountdownManager;
 
-public class PopupConnectingCountdown extends AppCompatActivity {
+public class PopupConnectingCountdown {
     private Context context;
     private Dialog dialogPopup;
-    private TextView txtConnectingCountdown;
     private ProgressBar progressBarConnecting;
     private ProgressBarAnimation progressBarAnimationConnecting;
     private CountdownManager countdownManagerConnecting;
@@ -29,11 +24,7 @@ public class PopupConnectingCountdown extends AppCompatActivity {
         initManager();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    //region dialog configuration methods
     private void getAllViews(){
         progressBarConnecting=dialogPopup.findViewById(R.id.progressbarConnectingCountdown);
     }
@@ -53,6 +44,7 @@ public class PopupConnectingCountdown extends AppCompatActivity {
     private void initManager(){
         countdownManagerConnecting=new CountdownManager(progressBarConnecting, progressBarAnimationConnecting);
     }
+    //endregion
 
     public void showPopup() {
         dialogPopup.show();
