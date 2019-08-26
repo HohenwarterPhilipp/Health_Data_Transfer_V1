@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.health_data_transfer_v1">
+    package="com.example.healthx">
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:screenOrientation="portrait" android:name="com.example.health_data_transfer_v1.pkgActivity.BloodPressureMeasurementActivity"></activity>
-        <activity android:screenOrientation="portrait" android:name="com.example.health_data_transfer_v1.pkgActivity.ScaleMeasurementActivity"></activity>
+        <activity android:screenOrientation="portrait" android:name="com.example.healthx.pkgActivity.BloodPressureMeasurementActivity"></activity>
+        <activity android:screenOrientation="portrait" android:name="com.example.healthx.pkgActivity.ScaleMeasurementActivity"></activity>
     </application>
 </manifest>

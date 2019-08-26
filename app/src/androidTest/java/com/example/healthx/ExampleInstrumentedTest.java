@@ -1,4 +1,4 @@
-package com.example.health_data_transfer_v1;
+package com.example.healthx;
 
 import android.content.Context;
 

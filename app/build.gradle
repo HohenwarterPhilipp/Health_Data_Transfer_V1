@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.1"
     defaultConfig {
-        applicationId "com.example.health_data_transfer_v1"
+        applicationId "com.example.healtx"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
@@ -38,6 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
     implementation files('libs\\IvyConnect (20171103).jar')
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
-    implementation 'com.jcminarro:RoundKornerLayouts:0.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
