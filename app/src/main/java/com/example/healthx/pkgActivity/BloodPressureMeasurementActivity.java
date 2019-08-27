@@ -21,7 +21,7 @@ import com.example.healthx.pkgManager.AlertManager;
 import com.example.healthx.pkgMisc.LocalDate;
 import com.example.healthx.pkgViews.PopupConnectingCountdown;
 import com.example.healthx.pkgViews.PopupMeasurementDataBloodPressure;
-import com.example.healthx.pkgViews.PopupMeasurementDataGraphBloodPressure;
+import com.example.healthx.pkgViews.PopupMeasurementDataBloodPressureGraph;
 import com.ivy.ivyconnect.device.callback.DeviceConnectCallback;
 import com.ivy.ivyconnect.device.callback.DeviceDisconnectCallback;
 import com.ivy.ivyconnect.device.callback.DeviceMeasurementCallback;
@@ -42,7 +42,7 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
     private BloodPressureMeasurement currentBloodPressureMeasurement;
     private PopupConnectingCountdown popupConnectingCountdown;
     private PopupMeasurementDataBloodPressure popupMeasurementData;
-    private PopupMeasurementDataGraphBloodPressure popupMeasurementDataGraphBloodPressure;
+    private PopupMeasurementDataBloodPressureGraph popupMeasurementDataGraphBloodPressure;
     private AlertManager alertManager;
     private Toolbar toolbar;
 
@@ -90,7 +90,7 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
     private void initPopups() {
         popupConnectingCountdown = new PopupConnectingCountdown(this);
         popupMeasurementData = new PopupMeasurementDataBloodPressure(this);
-        popupMeasurementDataGraphBloodPressure = new PopupMeasurementDataGraphBloodPressure(this);
+        popupMeasurementDataGraphBloodPressure = new PopupMeasurementDataBloodPressureGraph(this);
     }
     //endregion
 

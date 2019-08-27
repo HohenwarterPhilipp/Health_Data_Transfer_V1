@@ -23,7 +23,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
-public class PopupMeasurementDataGraphScale {
+public class PopupMeasurementDataScaleGraph {
     private Context context;
     private Dialog dialogPopupMeasurementDataGraphScale;
     private LineChart lineChartMeasurementDataScale;
@@ -33,7 +33,7 @@ public class PopupMeasurementDataGraphScale {
     private LineDataSet lineDataSetBmi;
     private ArrayList<LocalDate> listLocalDatesXAxis;
 
-    public PopupMeasurementDataGraphScale(Context context) {
+    public PopupMeasurementDataScaleGraph(Context context) {
         this.context=context;
         initDialog();
         getAllViews();

@@ -23,7 +23,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
-public class PopupMeasurementDataGraphBloodPressure {
+public class PopupMeasurementDataBloodPressureGraph {
     private Context context;
     private Dialog dialogPopupMeasurementDataGraphBloodPressure;
     private LineChart lineChartMeasurementDataBloodPressure;
@@ -34,7 +34,7 @@ public class PopupMeasurementDataGraphBloodPressure {
     private LineDataSet lineDataSetSystolic;
     private ArrayList<LocalDate> listLocalDatesXAxis;
 
-    public PopupMeasurementDataGraphBloodPressure(Context context) {
+    public PopupMeasurementDataBloodPressureGraph(Context context) {
         this.context=context;
         initDialog();
         getAllViews();

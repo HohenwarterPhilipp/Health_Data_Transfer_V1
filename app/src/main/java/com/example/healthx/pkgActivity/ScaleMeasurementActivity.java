@@ -20,7 +20,7 @@ import com.example.healthx.pkgData.ScaleMeasurement;
 import com.example.healthx.pkgManager.AlertManager;
 import com.example.healthx.pkgMisc.LocalDate;
 import com.example.healthx.pkgViews.PopupConnectingCountdown;
-import com.example.healthx.pkgViews.PopupMeasurementDataGraphScale;
+import com.example.healthx.pkgViews.PopupMeasurementDataScaleGraph;
 import com.example.healthx.pkgViews.PopupMeasurementDataScale;
 import com.ivy.ivyconnect.device.callback.DeviceConnectCallback;
 import com.ivy.ivyconnect.device.callback.DeviceDisconnectCallback;
@@ -44,7 +44,7 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     private ScaleMeasurement currentScaleMeasurement;
     private PopupConnectingCountdown popupConnectingCountdown;
     private PopupMeasurementDataScale popupMeasurementData;
-    private PopupMeasurementDataGraphScale popupMeasurementDataGraphScale;
+    private PopupMeasurementDataScaleGraph popupMeasurementDataGraphScale;
     private AlertManager alertManager;
     private Toolbar toolbar;
 
@@ -96,7 +96,7 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     private void initPopups() {
         popupConnectingCountdown = new PopupConnectingCountdown(this);
         popupMeasurementData = new PopupMeasurementDataScale(this);
-        popupMeasurementDataGraphScale = new PopupMeasurementDataGraphScale(this);
+        popupMeasurementDataGraphScale = new PopupMeasurementDataScaleGraph(this);
     }
     //endregion
 
