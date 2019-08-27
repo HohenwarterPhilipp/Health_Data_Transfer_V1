@@ -48,7 +48,7 @@ public class PopupMeasurementDataGraphScale {
 
     private void initDialog(){
         dialogPopupMeasurementDataGraphScale=new Dialog(context);
-        dialogPopupMeasurementDataGraphScale.setContentView(R.layout.popup_measurement_data_graph_blood_pressure);
+        dialogPopupMeasurementDataGraphScale.setContentView(R.layout.popup_measurement_data_blood_pressure_graph);
         dialogPopupMeasurementDataGraphScale.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
