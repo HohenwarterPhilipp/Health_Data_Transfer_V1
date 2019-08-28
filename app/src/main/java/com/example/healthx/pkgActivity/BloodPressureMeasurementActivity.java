@@ -227,7 +227,6 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
     }
 
     private class MeasurementSaver extends AsyncTask<Context, Void,BloodPressureMeasurement> {
-
         BloodPressureMeasurement cur;
 
         public MeasurementSaver(BloodPressureMeasurement currentBloodPressureMeasurement) {

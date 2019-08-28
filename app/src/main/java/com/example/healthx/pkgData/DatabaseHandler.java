@@ -3,8 +3,6 @@ package com.example.healthx.pkgData;
 import java.util.List;
 
 public class DatabaseHandler {
-
-
     public static BloodPressureMeasurement addBloodPressureMeasurementToDB(final AppDatabase database, BloodPressureMeasurement bloodPressureMeasurement) {
         database.bloodPressureMeasurementDao().insertBloodPressureMeasurements(bloodPressureMeasurement);
         return bloodPressureMeasurement;
