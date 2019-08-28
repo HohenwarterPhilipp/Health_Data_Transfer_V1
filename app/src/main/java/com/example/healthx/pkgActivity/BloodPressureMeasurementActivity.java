@@ -197,7 +197,10 @@ public class BloodPressureMeasurementActivity extends AppCompatActivity implemen
     public void onMeasurementFinished(MeasurementType measurementType, Object o) {
         if (currentBloodPressureMeasurement == null) {
             PressureComplete pressureComplete = (PressureComplete) o;
-            currentBloodPressureMeasurement = new BloodPressureMeasurement(pressureComplete.getDiastolic(), pressureComplete.getSystolic(), pressureComplete.getHeartRate(), new LocalDate(System.currentTimeMillis()));
+            currentBloodPressureMeasurement = new BloodPressureMeasurement(pressureComplete.getDiastolic(),
+                                                                            pressureComplete.getSystolic(),
+                                                                            pressureComplete.getHeartRate(),
+                                                                            new LocalDate(System.currentTimeMillis()));
             new MeasurementSaver(currentBloodPressureMeasurement).execute(this);
             deviceArm.destroy();
             btnReceiveBloodPressureMeasurement.setEnabled(true);

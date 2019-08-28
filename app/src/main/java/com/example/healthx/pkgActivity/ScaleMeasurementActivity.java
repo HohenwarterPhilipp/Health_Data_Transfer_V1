@@ -141,7 +141,7 @@ public class ScaleMeasurementActivity extends AppCompatActivity implements View.
     @Override
     public void onDeviceConnected() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(2000);                 //device needs time for configuration
             popupConnectingCountdown.cancelPopup();
             alertManager.showAlertDialogConnected();
             deviceScale.setDisconnectCallback(this);

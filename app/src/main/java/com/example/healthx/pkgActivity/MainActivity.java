@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.healthx.R;
-import com.example.healthx.pkgData.ScaleMeasurement;
 import com.example.healthx.pkgManager.AlertManager;
 
 import android.content.pm.PackageManager;
